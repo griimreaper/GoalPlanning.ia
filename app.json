@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "MiApp",
-    "slug": "MiApp",
+    "name": "GoalPlanning.IA",
+    "slug": "goalplanning",
+    "scheme": "goalplanning",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/goalicon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -13,17 +14,53 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.goalplanning.ia",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/androidIcon.png",
+        "backgroundColor": "#000"
       },
-      "edgeToEdgeEnabled": true
+      "package": "com.goalplanning.ia",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "com.goalplanning.ia",
+              "host": ""
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/goalicon.png",
+      "bundler": "metro",
+      "output": "server"
+    },
+    "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.56855945762-lr0p7u4a76mtop76qs9eiru2ik4gpcp7"
+        }
+      ],
+      "expo-localization",
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "1cf89e03-de60-47ef-84a9-d494b793da49"
+      }
     }
   }
 }
