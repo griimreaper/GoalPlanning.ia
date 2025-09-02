@@ -75,13 +75,31 @@ const ObjectiveCard: React.FC<Props> = ({ objective, scrollX, index, goal_id, st
         }
     };
 
-    const getItemStyle = (status: string | undefined) => {
-        switch (status) {
-            case 'completed': return { backgroundColor: 'rgba(40,167,69,0.2)', borderColor: '#28a745', borderWidth: 2 };
-            case 'pending': return { backgroundColor: 'rgba(255,193,7,0.2)', borderColor: '#ffc107', borderWidth: 2 };
-            case 'cancelled': return { backgroundColor: 'rgba(220,53,69,0.2)', borderColor: '#dc3545', borderWidth: 2 };
-            default: return { backgroundColor: 'rgba(255,255,255,0.1)' };
+    const getItemStyle = (objective: Objective) => {
+        const now = new Date();
+        const scheduledDate = objective.scheduled_at ? new Date(objective.scheduled_at) : null;
+
+        // Pending + fecha no pasó → default
+        if (objective.status === 'pending' && scheduledDate && scheduledDate > now) {
+            return { backgroundColor: 'rgba(255,255,255,0.1)', borderColor: '#ccc', borderWidth: 2 };
         }
+
+        switch (objective.status) {
+            case 'completed':
+                return { backgroundColor: 'rgba(40,167,69,0.2)', borderColor: '#28a745', borderWidth: 2 };
+            case 'pending':
+                return { backgroundColor: 'rgba(255,193,7,0.2)', borderColor: '#ffc107', borderWidth: 2 };
+            case 'cancelled':
+                return { backgroundColor: 'rgba(220,53,69,0.2)', borderColor: '#dc3545', borderWidth: 2 };
+            default:
+                return { backgroundColor: 'rgba(255,255,255,0.1)' };
+        }
+    };
+
+    const statusShortLabel: Record<string, string> = {
+        pending: 'P',
+        completed: '✔',   // check mark
+        cancelled: '✖',   // cross mark
     };
 
     const inputRange = [
@@ -97,7 +115,7 @@ const ObjectiveCard: React.FC<Props> = ({ objective, scrollX, index, goal_id, st
     });
 
     return (
-        <Animated.View style={[styles.itemContainer, style, getItemStyle(objective.status), { transform: !isWeb ? [{ scale }] : [] }]}>
+        <Animated.View style={[styles.itemContainer, style, getItemStyle(objective), { transform: !isWeb ? [{ scale }] : [] }]}>
             {loading && (
                 <View style={styles.loaderOverlay}>
                     <ActivityIndicator size="large" color="#fff" />
@@ -120,7 +138,7 @@ const ObjectiveCard: React.FC<Props> = ({ objective, scrollX, index, goal_id, st
                         </View>
                     )}
 
-                    <View style={{ maxHeight: isWeb ? 400 : 200, height: isWeb ? 400 : null, marginBottom: 10 }}>
+                    <View style={{ maxHeight: isWeb ? 350 : 200, height: isWeb ? 350 : null, marginBottom: 10 }}>
                         <ScrollView showsVerticalScrollIndicator={true}>
                             <Text style={styles.title}>{objective.title}</Text>
                             <Text style={styles.itemDescription}>{objective.description}</Text>
@@ -142,7 +160,7 @@ const ObjectiveCard: React.FC<Props> = ({ objective, scrollX, index, goal_id, st
                         </TouchableOpacity>
                     )}
                     {/* Badge */}
-                    <View style={[styles.statusBadge, getItemStyle(objective.status)]}>
+                    <View style={[styles.statusBadge, getItemStyle(objective), { marginTop: objective.youtube_links ? 0 : 50 }]}>
                         <Text style={styles.statusBadgeText}>{objective.status.toUpperCase()}</Text>
                     </View>
 
@@ -154,11 +172,13 @@ const ObjectiveCard: React.FC<Props> = ({ objective, scrollX, index, goal_id, st
                                 style={[
                                     styles.statusButton,
                                     objective.status === statusOption && { borderWidth: 2, borderColor: '#fff' },
-                                    { backgroundColor: getItemStyle(statusOption).backgroundColor }
+                                    { backgroundColor: getItemStyle(objective).backgroundColor }
                                 ]}
                                 onPress={() => handleChangeStatus(objective, statusOption)}
                             >
-                                <Text style={styles.statusButtonText}>{statusOption.charAt(0).toUpperCase()}</Text>
+                                <Text style={styles.statusButtonText}>
+                                    {statusShortLabel[statusOption]}
+                                </Text>
                             </TouchableOpacity>
                         ))}
                     </View>
@@ -194,7 +214,7 @@ const ObjectiveCard: React.FC<Props> = ({ objective, scrollX, index, goal_id, st
 };
 
 const styles = StyleSheet.create({
-    itemContainer: { width: ITEM_WIDTH, marginHorizontal: 0, borderRadius: 15, marginTop: 20, backgroundColor: 'rgba(255,255,255,0.1)', padding: 16, alignSelf: 'flex-start', flexShrink: 1, minHeight: isWeb ? 500 : 300 },
+    itemContainer: { width: ITEM_WIDTH, marginHorizontal: 0, borderRadius: 15, marginTop: 20, backgroundColor: 'rgba(255,255,255,0.1)', padding: 16, alignSelf: 'flex-start', flexShrink: 1, minHeight: isWeb ? 450 : 300 },
     itemDeadlineContainer: { flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginBottom: 6 },
     itemDeadlineDate: { fontWeight: 'bold', textTransform: 'capitalize', fontSize: 14, color: '#FFD700' },
     itemDeadlineTime: { fontWeight: 'bold', fontSize: 14, color: '#FFD700' },

@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 import { toastConfig } from './config/ToastConfig';
+import Boton from './components/Boton';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const queryClient = new QueryClient();
@@ -22,6 +23,8 @@ const isWeb = Platform.OS === 'web';
 const maxContainerWidth = 1200; // ancho máximo de contenido en web
 
 export default function App() {
+  const apkUrl = "https://expo.dev/artifacts/eas/ntqqfUDSGt4TmtH7ykxcLC.tar.gz"; // reemplaza con la URL de tu APK
+
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
@@ -81,6 +84,28 @@ export default function App() {
               <Stack.Screen name="Auth" component={AuthScreen} options={{ headerRight: () => null }} />
             </Stack.Navigator>
           </NavigationContainer>
+          {/* Botón flotante para descargar APK solo en web */}
+          {isWeb && (
+            <Boton
+              onPress={() => window.open(apkUrl, "_blank")}
+              title='Download APK'
+              style={{
+                position: 'absolute',
+                bottom: 20,
+                right: 20,
+                backgroundColor: '#2575fc',
+                paddingVertical: 12,
+                paddingHorizontal: 16,
+                borderRadius: 30,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.3,
+                shadowRadius: 4,
+                elevation: 5,
+              }}
+            >
+            </Boton>
+          )}
         </AuthProvider>
         <Toast config={toastConfig} />
       </SafeAreaProvider>
