@@ -6,14 +6,16 @@ import ObjectiveUpdateWizard from './ObjetiveUpdateWizard';
 import { useQueryClient } from '@tanstack/react-query';
 import { Platform } from 'react-native';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 const ITEM_WIDTH = width * 0.65;
 
 const isWeb = Platform.OS === 'web';
 const ITEM_WIDTH_WEB = 400; // ancho fijo para web
 const ITEM_WIDTH_MOBILE = width * 0.65;
+const DESCRIPTION_MAX_HEIGHT = height * 0.3; // hasta 40% de la pantalla
 const ITEM_WIDTH_FINAL = isWeb ? ITEM_WIDTH_WEB : ITEM_WIDTH_MOBILE;
 
+const MAX_CARD_HEIGHT = height * 0.7; // 90% de la altura de la pantalla
 interface Props {
     objective: Objective;
     scrollX: Animated.Value;
@@ -138,7 +140,7 @@ const ObjectiveCard: React.FC<Props> = ({ objective, scrollX, index, goal_id, st
                         </View>
                     )}
 
-                    <View style={{ maxHeight: isWeb ? 350 : 200, height: isWeb ? 350 : null, marginBottom: 10 }}>
+                    <View style={{ height: DESCRIPTION_MAX_HEIGHT, marginBottom: 10 }}>
                         <ScrollView showsVerticalScrollIndicator={true}>
                             <Text style={styles.title}>{objective.title}</Text>
                             <Text style={styles.itemDescription}>{objective.description}</Text>
@@ -214,7 +216,7 @@ const ObjectiveCard: React.FC<Props> = ({ objective, scrollX, index, goal_id, st
 };
 
 const styles = StyleSheet.create({
-    itemContainer: { width: ITEM_WIDTH, marginHorizontal: 0, borderRadius: 15, marginTop: 20, backgroundColor: 'rgba(255,255,255,0.1)', padding: 16, alignSelf: 'flex-start', flexShrink: 1, minHeight: isWeb ? 450 : 300 },
+    itemContainer: { width: ITEM_WIDTH, marginHorizontal: 0, borderRadius: 15, marginTop: 20, backgroundColor: 'rgba(255,255,255,0.1)', padding: 16, alignSelf: 'flex-start', flexShrink: 1, minHeight: isWeb ? 450 : 300, maxHeight: MAX_CARD_HEIGHT },
     itemDeadlineContainer: { flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginBottom: 6 },
     itemDeadlineDate: { fontWeight: 'bold', textTransform: 'capitalize', fontSize: 14, color: '#FFD700' },
     itemDeadlineTime: { fontWeight: 'bold', fontSize: 14, color: '#FFD700' },
