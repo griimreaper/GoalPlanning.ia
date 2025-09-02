@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, FlatList, StyleSheet, Dimensions, Animated, ActivityIndicator, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Dimensions, Animated, ActivityIndicator, TouchableOpacity, Platform, ScrollView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GoalDetail, getGoalDetail } from '../services/goals';
@@ -70,14 +70,19 @@ export default function GoalDetailScreen() {
 
     return (
         <AppBackground>
-            <SafeAreaView style={[{ paddingTop: insets.top }]}>
+            <SafeAreaView style={[styles.background, { paddingTop: isWeb ? 50 : insets.top }]}>
                 <Text style={styles.title}>{goal.title}</Text>
                 <Text style={styles.subtitle}>Availability: {goal.availability}</Text>
                 <Text style={styles.subtitle}>Deadline: {goal.deadline}</Text>
 
                 {isWeb ? (
-                    <View style={styles.webScrollContainer}>
-                        <View style={styles.webRow}>
+                    <View style={[styles.webScrollContainer]}>
+                        <ScrollView
+                            horizontal
+                            contentContainerStyle={{ paddingHorizontal: 20 }}
+                            showsHorizontalScrollIndicator={true}
+                            showsVerticalScrollIndicator={false} // aunque no tiene efecto real en RN Web
+                        >
                             {goal.objectives.map((item, index) => (
                                 <ObjectiveCard
                                     key={item.id}
@@ -89,7 +94,7 @@ export default function GoalDetailScreen() {
                                 />
                             ))}
                             <ExtendsGoalButton goal_id={goal_id} style={styles.webCard} />
-                        </View>
+                        </ScrollView>
                     </View>
                 ) : (
                     <Animated.FlatList
@@ -121,16 +126,13 @@ export default function GoalDetailScreen() {
                 )}
 
             </SafeAreaView>
-        </AppBackground>
+        </AppBackground >
     );
 }
 
 const styles = StyleSheet.create({
     background: {
         flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        paddingTop: isWeb ? 30 : 50,
         backgroundColor: '#1E1E1E',
         width: '100%',
     },
@@ -170,7 +172,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     webScrollContainer: {
-        overflow: 'scroll',       // permite scroll horizontal
+        overflow: 'hidden',       // permite scroll horizontal
         paddingVertical: 20,
         display: 'flex',
         paddingHorizontal: 20,    // opcional, para que no pegue al borde
@@ -183,5 +185,6 @@ const styles = StyleSheet.create({
     webCard: {
         width: isWeb ? 350 : 300,              // ancho fijo de cada card
         flexShrink: 0,           // evita que se reduzca al caber
+        marginRight: isWeb ? 20 : 0,
     },
 });

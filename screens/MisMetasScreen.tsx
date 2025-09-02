@@ -56,7 +56,7 @@ export default function MyGoalsScreen() {
 
     return (
         <AppBackground>
-            <SafeAreaView style={[styles.container, { paddingTop: insets.top + (isWeb ? 0 : 20) }]}>
+            <SafeAreaView style={[styles.container, { paddingTop: isWeb ? 50 : insets.top + 20 }]}>
 
                 <View style={[styles.container]}>
                     <Text style={styles.title}>My Goals</Text>
