@@ -23,7 +23,7 @@ const isWeb = Platform.OS === 'web';
 const maxContainerWidth = 1200; // ancho máximo de contenido en web
 
 export default function App() {
-  const apkUrl = "https://expo.dev/artifacts/eas/ntqqfUDSGt4TmtH7ykxcLC.tar.gz"; // reemplaza con la URL de tu APK
+  const apkUrl = "https://drive.google.com/file/d/1hmf_Q_TQS-p_ytG7Zov8m1s8_mdVAU60/view?usp=sharing"; // reemplaza con la URL de tu APK
 
   return (
     <QueryClientProvider client={queryClient}>
